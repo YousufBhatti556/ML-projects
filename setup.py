@@ -18,9 +18,5 @@ setup(
     author="Yousuf",
     author_email="yousufbhatti99@mail.com",
     packages=find_packages(),  # Looks for mlproject/
-    install_requires=[
-        "pandas",
-        "numpy",
-        "seaborn"
-    ],
+    install_requires=get_requirements("requirements.txt")
 )

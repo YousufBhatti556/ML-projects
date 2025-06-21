@@ -7,6 +7,7 @@ from mlproject.logger import logging
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
+from mlproject.components.data_transformation import DataTransformation, DataTransformationConfig
 
 @dataclass
 class DataIngestionConfig:
@@ -22,7 +23,7 @@ class DataIngestion:
     def train_test_split(self):
         logging.info("Entered the train test split component.")
         try:
-            df = pd.read_csv("notebook\data\std_perf.csv")
+            df = pd.read_csv(r"notebook\data\std_perf.csv")
             logging.info("Reading the csv file")
             os.makedirs(os.path.dirname(self.ingestion_config.train_data_path), exist_ok=True)
             df.to_csv(self.ingestion_config.raw_data_path, index=False, header=True)
@@ -44,4 +45,7 @@ class DataIngestion:
 
 if __name__ == "__main__":
     obj = DataIngestion()
-    obj.train_test_split()
+    train_data_path, test_data_path = obj.train_test_split()
+
+    data_preprocessing = DataTransformation()
+    data_preprocessing.initiate_transformation(train_data_path, test_data_path)

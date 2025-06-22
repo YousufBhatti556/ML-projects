@@ -3,6 +3,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
 from mlproject.exception import CustomException
 from mlproject.logger import logging
+from sklearn.model_selection import GridSearchCV
 
 def save_obj(file_path, obj):
     try:
@@ -16,11 +17,18 @@ def save_obj(file_path, obj):
         logging.info(CustomException(e, sys))
         raise CustomException(e, sys)
     
-def evaluate_models(X_train, y_train, X_test, y_test, models):
+def evaluate_models(X_train, y_train, X_test, y_test, models, model_params):
     report = {}
     try:
         for i in range(len(list(models))):
             model = list(models.values())[i]
+            param = list(model_params.values())[i]
+
+            gs = GridSearchCV(model, param, cv=3)
+            gs.fit(X_train, y_train)
+            
+
+            model.set_params(**gs.best_params_)
             model.fit(X_train, y_train)
 
             y_train_pred = model.predict(X_train)
